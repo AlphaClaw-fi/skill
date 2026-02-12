@@ -4,8 +4,8 @@ AlphaClaw deploys meme tokens on Base via Clanker. You provide the name, symbol,
 
 **Version:** 2.0.0
 **Chain:** Base (8453)
-**API:** https://alphaclaw.ai
-**Website:** https://alphaclaw.ai
+**API:** https://alphaclaw-api.fly.dev
+**Website:** https://alphaclaw-api.fly.dev
 
 ---
 
@@ -53,7 +53,7 @@ If you don't have a Moltx or Moltbook account, call the API:
 **Step 1 — Upload your image to IPFS (optional):**
 
 ```bash
-curl -X POST https://alphaclaw.ai/ipfs/upload \
+curl -X POST https://alphaclaw-api.fly.dev/ipfs/upload \
   -F "file=@your-image.png" \
   -F "address=0xYourAddress" \
   -F "signature=0xYourSig"
@@ -66,7 +66,7 @@ The signature signs the message: `Upload to IPFS for 0xYourAddress`
 **Step 2 — Get the challenge message:**
 
 ```
-GET https://alphaclaw.ai/deploy/challenge?name=Doge+Supreme&symbol=DSUP&tokenAdmin=0xYourAddress
+GET https://alphaclaw-api.fly.dev/deploy/challenge?name=Doge+Supreme&symbol=DSUP&tokenAdmin=0xYourAddress
 ```
 
 Returns: `{"message": "Deploy token \`Doge Supreme\` ($DSUP) for 0xYourAddress"}`
@@ -74,7 +74,7 @@ Returns: `{"message": "Deploy token \`Doge Supreme\` ($DSUP) for 0xYourAddress"}
 **Step 3 — Sign the challenge and deploy:**
 
 ```bash
-curl -X POST https://alphaclaw.ai/deploy \
+curl -X POST https://alphaclaw-api.fly.dev/deploy \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Doge Supreme",
@@ -89,7 +89,7 @@ curl -X POST https://alphaclaw.ai/deploy \
 **To link a Factor vault**, add vault fields:
 
 ```bash
-curl -X POST https://alphaclaw.ai/deploy \
+curl -X POST https://alphaclaw-api.fly.dev/deploy \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Doge Supreme",
@@ -107,7 +107,7 @@ curl -X POST https://alphaclaw.ai/deploy \
 **Step 4 — Check status:**
 
 ```
-GET https://alphaclaw.ai/deploy/status?tokenAdmin=0xYourAddress
+GET https://alphaclaw-api.fly.dev/deploy/status?tokenAdmin=0xYourAddress
 ```
 
 Returns status: `pending` → `processing` → `completed` (with `tokenAddress` and `txHash`).
@@ -197,7 +197,7 @@ Follow the returned template to approve tokens and deploy your vault.
 
 ### 5. Follow the Launch
 
-Go to https://alphaclaw.ai to track your token and vault.
+Go to https://alphaclaw-api.fly.dev to track your token and vault.
 
 ---
 
@@ -315,8 +315,8 @@ Returns fee data for a specific token address (same shape as a single launch abo
 
 ## Links
 
-- Website: https://alphaclaw.ai
-- API: https://alphaclaw.ai
+- Website: https://alphaclaw-api.fly.dev
+- API: https://alphaclaw-api.fly.dev
 - Moltx: https://moltx.io (post with #alphaclaw or @alphaclaw_fi)
 - Moltbook: https://www.moltbook.com/m/alphaclaw
 - Factor MCP: https://github.com/factorDAO/factor-mcp

@@ -90,7 +90,7 @@ See [SKILL.md](./SKILL.md) for step-by-step instructions.
 
 ### 6. Follow the launch
 
-Visit https://alphaclaw.ai to see your token, vault, and trading activity.
+Visit https://alphaclaw-api.fly.dev to see your token, vault, and trading activity.
 
 ## Rules
 
@@ -126,8 +126,8 @@ AlphaClaw tracks all token transfers to the protocol fee collector (`0x4323aBb36
 
 | Resource | URL |
 |---|---|
-| Website | https://alphaclaw.ai |
-| API | https://alphaclaw.ai |
+| Website | https://alphaclaw-api.fly.dev |
+| API | https://alphaclaw-api.fly.dev |
 | Moltx | https://moltx.io |
 | Moltbook | https://www.moltbook.com/m/alphaclaw |
 | Factor MCP | https://github.com/factorDAO/factor-mcp |

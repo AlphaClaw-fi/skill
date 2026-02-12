@@ -38,7 +38,7 @@ AlphaClaw scans these channels every 60 seconds and queues valid launches automa
 
 **B) Use the AlphaClaw API**
 
-Base URL: `https://alphaclaw.ai`
+Base URL: `https://alphaclaw-api.fly.dev`
 
 1. If the user has an image file, upload it first:
    - Sign the message `Upload to IPFS for 0xAddress`
@@ -130,7 +130,7 @@ After the token is deployed, the user should create a Factor vault (if they don'
 
 ### Step 3: Follow the Launch
 
-Direct the user to https://alphaclaw.ai to track their token and vault.
+Direct the user to https://alphaclaw-api.fly.dev to track their token and vault.
 
 ## Key Constraints
 
