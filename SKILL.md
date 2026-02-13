@@ -104,13 +104,38 @@ curl -X POST https://alphaclaw-api.fly.dev/deploy \
   }'
 ```
 
-**Step 4 — Check status:**
+**Step 4 — Tweet verification (first-time admins only):**
+
+If this is the admin's first launch, the deploy response will include a `tweetVerification` object:
+
+```json
+{
+  "tweetVerification": {
+    "code": "Xk4mNp7R",
+    "tweet": "Launching $DSUP with @alphaclaw_fi\nVerification code: Xk4mNp7R"
+  }
+}
+```
+
+**Ask your human to post the exact `tweet` text on X.** Then verify it:
+
+```bash
+curl -X POST https://alphaclaw-api.fly.dev/deploy/verify-tweet \
+  -H "Content-Type: application/json" \
+  -d '{"tokenAdmin": "0xYourAddress", "tweetUrl": "https://x.com/username/status/123456789"}'
+```
+
+On success, the launch moves to `pending` and deploys automatically. Codes expire after 1 hour.
+
+If the admin has already verified on a previous launch, this step is skipped — the deploy goes straight to `pending`.
+
+**Step 5 — Check status:**
 
 ```
 GET https://alphaclaw-api.fly.dev/deploy/status?tokenAdmin=0xYourAddress
 ```
 
-Returns status: `pending` → `processing` → `completed` (with `tokenAddress` and `txHash`).
+Returns status: `pending_tweet` → `pending` → `processing` → `completed` (with `tokenAddress` and `txHash`).
 
 ---
 
@@ -207,7 +232,8 @@ Go to https://alphaclaw-api.fly.dev to track your token and vault.
 |---|---|---|
 | `/health` | GET | Health check |
 | `/deploy/challenge` | GET | Get challenge message to sign |
-| `/deploy` | POST | Queue a token launch |
+| `/deploy` | POST | Queue a token launch (returns tweet code for first-time admins) |
+| `/deploy/verify-tweet` | POST | Verify tweet for pending launch (body: tokenAdmin, tweetUrl) |
 | `/deploy/status` | GET | Check launch status by tokenAdmin |
 | `/launches` | GET | List recent launches |
 | `/fees` | GET | All launches with fee transfer totals |
@@ -218,8 +244,8 @@ Go to https://alphaclaw-api.fly.dev to track your token and vault.
 
 | Field | Required | Description |
 |---|---|---|
-| `name` | Yes | Token name (e.g., "Doge Supreme") |
-| `symbol` | Yes | Token symbol, 2-6 chars (e.g., "DSUP") |
+| `name` | Yes | Token name, max 100 chars (e.g., "Doge Supreme") |
+| `symbol` | Yes | Token symbol, 2-10 alphanumeric chars (e.g., "DSUP") |
 | `tokenAdmin` | Yes | Your EVM address (0x...) |
 | `signature` | Yes | EIP-191 signature of the challenge message |
 | `description` | No | Token description |
@@ -253,7 +279,7 @@ Returns:
 - `txHash` — the Clanker token deployment transaction
 - `factoryTx` — the AlphaClaw Factory registration transaction (null if registration hasn't completed yet; retried automatically every 2 minutes)
 
-Status values: `not_found`, `pending`, `processing`, `completed`, `failed`.
+Status values: `not_found`, `pending_tweet`, `pending`, `processing`, `completed`, `failed`.
 
 ---
 
@@ -302,12 +328,13 @@ Returns fee data for a specific token address (same shape as a single launch abo
 
 ## Rules
 
+- **Tweet verification.** First-time admins must post a tweet tagging `@alphaclaw_fi` with a verification code. Already-verified admins skip this on future launches. Codes expire after 1 hour.
 - **One token per address.** Each `tokenAdmin` address can deploy exactly one token (enforced both locally and on-chain).
 - **One token per vault.** Each vault can only be linked to one token (enforced on-chain).
 - **Vault owner check.** The vault owner must match the `tokenAdmin` requesting the launch.
 - **Signature required.** API deploys require a valid EIP-191 signature proving you own the address.
 - **Image passthrough.** IPFS or HTTPS image URLs are passed directly to Clanker — no re-upload needed.
-- **Rate limits.** API: 1 deploy per hour per IP, 5 total requests per 15 minutes.
+- **Rate limits.** API: 1 deploy per minute per IP, 30 general requests per minute.
 - **Protocol fee.** A 20% protocol fee is applied to LP reward splits. The remaining 80% goes to the token admin.
 - **Description tags.** Tokens from social channels get `[AGENT]` in their description. Vault-linked tokens get `[VAULT]`.
 

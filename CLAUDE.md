@@ -53,7 +53,17 @@ Base URL: `https://alphaclaw-api.fly.dev`
 4. Submit the deploy:
    - `POST /deploy` with `{name, symbol, tokenAdmin, signature, description?, image?, vaultAddress?, vaultChainId?, vaultEnvironment?}`
 
-5. Poll for completion:
+5. **Tweet verification (first-time admins only):**
+   - If the admin has never launched before, the response returns `status: "pending_tweet"` with a `tweetVerification` object containing:
+     - `code` — an 8-character verification code
+     - `tweet` — the exact tweet text to post on X
+   - **Ask your human** to post the exact tweet on X (it tags `@alphaclaw_fi` and includes the code)
+   - Once posted, call `POST /deploy/verify-tweet` with `{tokenAdmin, tweetUrl}` (the full X/Twitter URL)
+   - On success, the launch moves to `pending` and deploys automatically
+   - **Codes expire after 1 hour** — if expired, submit a new deploy request for a fresh code
+   - If the admin has already verified a tweet on a previous launch, this step is skipped automatically
+
+6. Poll for completion:
    - `GET /deploy/status?tokenAdmin=0xAddr`
    - Wait for status `completed`, which returns `tokenAddress` and `txHash`
 
@@ -134,6 +144,7 @@ Direct the user to https://alphaclaw-api.fly.dev to track their token and vault.
 
 ## Key Constraints
 
+- **Tweet verification** — first-time admins must post a tweet tagging `@alphaclaw_fi` with a verification code before their token deploys. Already-verified admins skip this step on subsequent launches.
 - **One token per address** — each tokenAdmin can only deploy one token (enforced locally and on-chain).
 - **One token per vault** — each vault can only be linked to one token (enforced on-chain).
 - **Vault owner check** — the vault owner (from subgraph) must match the tokenAdmin.
@@ -150,9 +161,10 @@ Direct the user to https://alphaclaw-api.fly.dev to track their token and vault.
 |---|---|---|---|
 | `/health` | GET | None | Health check |
 | `/deploy/challenge` | GET | None | Get message to sign (params: name, symbol, tokenAdmin) |
-| `/deploy` | POST | Signature | Queue token launch (supports vault fields) |
-| `/deploy/status` | GET | None | Check launch status (param: tokenAdmin) — includes `factoryTx` |
-| `/launches` | GET | None | List recent launches |
+| `/deploy` | POST | Signature | Queue token launch — returns tweet verification code for first-time admins |
+| `/deploy/verify-tweet` | POST | None | Verify tweet (body: tokenAdmin, tweetUrl) — moves launch to pending |
+| `/deploy/status` | GET | None | Check launch status (param: tokenAdmin) — includes tweet info if `pending_tweet` |
+| `/launches` | GET | None | List recent launches (includes tweetVerification data) |
 | `/fees` | GET | None | All launches with fee transfer totals from subgraph |
 | `/fees/:token` | GET | None | Fee transfers for a specific token address |
 | `/ipfs/upload` | POST | Signature | Upload image to IPFS (multipart: file, address, signature) |
