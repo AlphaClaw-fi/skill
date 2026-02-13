@@ -146,6 +146,7 @@ Direct the user to https://alphaclaw-api.fly.dev to track their token and vault.
 
 - **Tweet verification** — first-time admins must post a tweet tagging `@alphaclaw_fi` with a verification code before their token deploys. Already-verified admins skip this step on subsequent launches.
 - **One token per address** — each tokenAdmin can only deploy one token (enforced locally and on-chain).
+- **Unique name & symbol** — token names and symbols must be unique (case-insensitive). A launch will be rejected if another token already uses the same name or ticker.
 - **One token per vault** — each vault can only be linked to one token (enforced on-chain).
 - **Vault owner check** — the vault owner (from subgraph) must match the tokenAdmin.
 - **Signature required** — API deploys need a valid EIP-191 signature proving ownership of the tokenAdmin address.

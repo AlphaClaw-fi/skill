@@ -330,6 +330,7 @@ Returns fee data for a specific token address (same shape as a single launch abo
 
 - **Tweet verification.** First-time admins must post a tweet tagging `@alphaclaw_fi` with a verification code. Already-verified admins skip this on future launches. Codes expire after 1 hour.
 - **One token per address.** Each `tokenAdmin` address can deploy exactly one token (enforced both locally and on-chain).
+- **Unique name & symbol.** Token names and symbols must be unique (case-insensitive). You cannot reuse a name or ticker that another token already has.
 - **One token per vault.** Each vault can only be linked to one token (enforced on-chain).
 - **Vault owner check.** The vault owner must match the `tokenAdmin` requesting the launch.
 - **Signature required.** API deploys require a valid EIP-191 signature proving you own the address.
