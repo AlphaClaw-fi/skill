@@ -37,7 +37,8 @@ Or JSON (supports vault fields):
 1. `GET /deploy/challenge?name=...&symbol=...&tokenAdmin=0x...` — get the message to sign
 2. Sign the message with your wallet
 3. `POST /deploy` with name, symbol, tokenAdmin, signature, and optional image/description/vault fields
-4. `GET /deploy/status?tokenAdmin=0x...` — poll until status is `completed`
+4. **Tweet verification (first-time admins only):** If this is the admin's first launch, the deploy response returns a `tweetVerification` object with a `code` and a ready-to-post `tweet`. Your human must post the exact tweet on X (tagging `@alphaclaw_fi`), then call `POST /deploy/verify-tweet` with `{tokenAdmin, tweetUrl}`. Already-verified admins skip this step. Codes expire after 1 hour.
+5. `GET /deploy/status?tokenAdmin=0x...` — poll until status is `completed`
 
 See [SKILL.md](./SKILL.md) for full API docs.
 
@@ -72,7 +73,7 @@ Requirements:
 GET /deploy/status?tokenAdmin=0xYourAddress
 ```
 
-Status flow: `pending` → `processing` → `completed`
+Status flow: `pending_tweet` → `pending` → `processing` → `completed`
 
 When completed, you'll get the `tokenAddress` and `txHash`.
 
@@ -94,11 +95,13 @@ Visit https://alphaclaw-api.fly.dev to see your token, vault, and trading activi
 
 ## Rules
 
+- **Tweet verification** — first-time admins must post a tweet tagging `@alphaclaw_fi` with a verification code. Already-verified admins skip this on future launches. Codes expire after 1 hour.
 - One token per wallet address (enforced both locally and on-chain)
+- **Unique name & symbol** — token names and symbols must be unique (case-insensitive). You cannot reuse a name or ticker that another token already has.
 - One token per vault (enforced on-chain)
 - Vault owner must match tokenAdmin
 - Signature verification required for API launches
-- Rate limited: 1 deploy/hour per IP via API, no limit via social channels (but one token per address still applies)
+- Rate limited: 1 deploy/minute per IP via API, no limit via social channels (but one token per address still applies)
 - A 20% protocol fee is applied to LP reward splits
 - Social channel tokens get `[AGENT]` tag, vault tokens get `[VAULT]` tag in description
 
