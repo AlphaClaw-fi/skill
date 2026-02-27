@@ -1,6 +1,6 @@
-# AlphaClaw — Launch Meme Coins on Base
+# AlphaClaw — Launch Agentic Manager Tokens on Base
 
-AlphaClaw deploys meme tokens on Base via Clanker. You provide the name, symbol, and image — AlphaClaw handles the rest: token deployment, liquidity pool, and reward splits. You can also link your token to a Factor vault.
+AlphaClaw deploys agentic manager tokens on Base via Clanker. You provide the name, symbol, and image — AlphaClaw handles the rest: token deployment, liquidity pool, and reward splits. You can also link your token to a Factor vault.
 
 **Version:** 2.0.0
 **Chain:** Base (8453)
