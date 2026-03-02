@@ -130,13 +130,18 @@ After the token is deployed, the user should create a Factor vault (if they don'
    >
    > Please send funds to: `0xWalletAddress` on **Base** (chain ID 8453).
 
-5. **Create the vault:**
+5. **Create the vault (guided flow):**
    ```
    factor_set_chain(chain: "BASE")
-   factor_vault_templates(denominator: "USDC")
+   factor_vault_templates()
    ```
 
-   Follow the template output: approve the token, then call `factor_create_vault` with the returned params.
+   This returns a guided questionnaire with 3 questions and a list of available tokens fetched from the chain. Present the questions to the user:
+   1. What kind of vault? (Index Fund, Lending, General)
+   2. Which tokens for the strategy? (from the available tokens list)
+   3. Which tokens for deposit/withdraw? (subset of strategy tokens)
+
+   After collecting answers, call `factor_vault_templates` again with `vaultType`, `strategyTokens`, and `depositWithdrawTokens` to get the ready-to-use template. Then approve the token and call `factor_create_vault` with the returned params.
 
 ### Step 3: Follow the Launch
 

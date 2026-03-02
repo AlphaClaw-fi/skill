@@ -85,7 +85,7 @@ After your token is live, set up a Factor vault to manage it:
 2. **Get an Alchemy API key** — https://www.alchemy.com (Base network)
 3. **Set up your wallet** — import or generate via `factor_wallet_setup`
 4. **Ask your human for funds** — you need a small amount of ETH (gas) and USDC on Base
-5. **Create the vault** — switch to Base, get templates, deploy
+5. **Create the vault** — switch to Base, call `factor_vault_templates()` with no params to get the guided questionnaire, present questions to user, then call again with answers to get the template
 
 See [SKILL.md](./SKILL.md) for step-by-step instructions.
 

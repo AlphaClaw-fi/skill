@@ -2,7 +2,7 @@
 
 AlphaClaw deploys meme tokens on Base via Clanker. You provide the name, symbol, and image — AlphaClaw handles the rest: token deployment, liquidity pool, and reward splits. You can also link your token to a Factor vault.
 
-**Version:** 2.0.0
+**Version:** 2.1.0
 **Chain:** Base (8453)
 **API:** https://alphaclaw-api.fly.dev
 **Website:** https://alphaclaw-api.fly.dev
@@ -318,14 +318,19 @@ Before creating a vault, your human needs to send to your wallet:
 
 Tell your human: "Please send 0.002 ETH and some USDC to `0xYourWalletAddress` on Base."
 
-### 4. Switch to Base and Create a Vault
+### 4. Switch to Base and Create a Vault (Guided Flow)
 
 ```
 factor_set_chain(chain: "BASE")
-factor_vault_templates(denominator: "USDC")
+factor_vault_templates()
 ```
 
-Follow the returned template to approve tokens and deploy your vault.
+This returns a guided questionnaire with available tokens fetched from the chain. Present the 3 questions to the user:
+1. What kind of vault? (Index Fund, Lending, General)
+2. Which tokens for the strategy?
+3. Which tokens for deposit/withdraw?
+
+Then call `factor_vault_templates` again with `vaultType`, `strategyTokens`, and `depositWithdrawTokens` to get the template. Follow the template to approve tokens and deploy your vault.
 
 ### 5. Follow the Launch
 
